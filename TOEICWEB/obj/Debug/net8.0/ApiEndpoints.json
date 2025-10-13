@@ -137,6 +137,16 @@
   },
   {
     "ContainingType": "ToeicWeb.Controllers.BaiDocController",
+    "Method": "GetAllBaiDocHistory",
+    "RelativePath": "api/BaiDoc/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiDocController",
     "Method": "GetBaiDocHistory",
     "RelativePath": "api/BaiDoc/history/{maBaiDoc}",
     "HttpMethod": "GET",
@@ -149,6 +159,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiDocController",
+    "Method": "GetBaiDocHistoryStats",
+    "RelativePath": "api/BaiDoc/history/stats/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -167,6 +187,178 @@
       {
         "Name": "model",
         "Type": "SubmitBaiDocVM",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiHocController",
+    "Method": "GetAllBaiHoc",
+    "RelativePath": "api/BaiHoc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiHocController",
+    "Method": "GetBaiHocDetail",
+    "RelativePath": "api/BaiHoc/{maBai}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBai",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "GetAllBaiNghe",
+    "RelativePath": "api/BaiNghe",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "GetBaiNgheDetail",
+    "RelativePath": "api/BaiNghe/{maBaiNghe}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBaiNghe",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "GetAllBaiNgheHistory",
+    "RelativePath": "api/BaiNghe/history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "GetBaiNgheHistory",
+    "RelativePath": "api/BaiNghe/history/{maBaiNghe}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBaiNghe",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "GetBaiNgheHistoryStats",
+    "RelativePath": "api/BaiNghe/history/stats/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.BaiNgheController",
+    "Method": "SubmitBaiNghe",
+    "RelativePath": "api/BaiNghe/submit/{maBaiNghe}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBaiNghe",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "SubmitBaiNgheVM",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.TienDoHocTapController",
+    "Method": "GetAllTienDoHocTap",
+    "RelativePath": "api/TienDoHocTap",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.TienDoHocTapController",
+    "Method": "GetTienDoHocTapByBaiHoc",
+    "RelativePath": "api/TienDoHocTap/bai/{maBai}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBai",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.TienDoHocTapController",
+    "Method": "GetTienDoHocTapByLoTrinh",
+    "RelativePath": "api/TienDoHocTap/lotrinh/{maLoTrinh}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ToeicWeb.Controllers.TienDoHocTapController",
+    "Method": "UpdateTienDoHocTap",
+    "RelativePath": "api/TienDoHocTap/update/{maBai}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBai",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "UpdateTienDoHocTapVM",
         "IsRequired": true
       }
     ],

@@ -143,3 +143,4 @@ D:\CODE\vs2022\TOEICWEB\TOEICWEB\bin\Debug\net8.0\Microsoft.IdentityModel.Protoc
 D:\CODE\vs2022\TOEICWEB\TOEICWEB\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\CODE\vs2022\TOEICWEB\TOEICWEB\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 D:\CODE\vs2022\TOEICWEB\TOEICWEB\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\CODE\vs2022\TOEICWEB\TOEICWEB\obj\Debug\net8.0\TOEICWEB.sourcelink.json

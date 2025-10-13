@@ -271,6 +271,18 @@
         }
       }
     },
+    "/api/BaiDoc/history": {
+      "get": {
+        "tags": [
+          "BaiDoc"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/BaiDoc/history/{maBaiDoc}": {
       "get": {
         "tags": [
@@ -286,6 +298,270 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiDoc/history/stats/summary": {
+      "get": {
+        "tags": [
+          "BaiDoc"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiHoc": {
+      "get": {
+        "tags": [
+          "BaiHoc"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiHoc/{maBai}": {
+      "get": {
+        "tags": [
+          "BaiHoc"
+        ],
+        "parameters": [
+          {
+            "name": "maBai",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe": {
+      "get": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe/{maBaiNghe}": {
+      "get": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "parameters": [
+          {
+            "name": "maBaiNghe",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe/submit/{maBaiNghe}": {
+      "post": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "parameters": [
+          {
+            "name": "maBaiNghe",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitBaiNgheVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitBaiNgheVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitBaiNgheVM"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe/history": {
+      "get": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe/history/{maBaiNghe}": {
+      "get": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "parameters": [
+          {
+            "name": "maBaiNghe",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/BaiNghe/history/stats/summary": {
+      "get": {
+        "tags": [
+          "BaiNghe"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TienDoHocTap": {
+      "get": {
+        "tags": [
+          "TienDoHocTap"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TienDoHocTap/bai/{maBai}": {
+      "get": {
+        "tags": [
+          "TienDoHocTap"
+        ],
+        "parameters": [
+          {
+            "name": "maBai",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TienDoHocTap/lotrinh/{maLoTrinh}": {
+      "get": {
+        "tags": [
+          "TienDoHocTap"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TienDoHocTap/update/{maBai}": {
+      "post": {
+        "tags": [
+          "TienDoHocTap"
+        ],
+        "parameters": [
+          {
+            "name": "maBai",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTienDoHocTapVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTienDoHocTapVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTienDoHocTapVM"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -398,7 +674,38 @@
         },
         "additionalProperties": false
       },
+      "SubmitBaiNgheVM": {
+        "type": "object",
+        "properties": {
+          "thoiGianLamGiay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "traLois": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TraLoiNgheVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TraLoiBaiDocVM": {
+        "type": "object",
+        "properties": {
+          "maCauHoi": {
+            "type": "string",
+            "nullable": true
+          },
+          "maDapAn": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TraLoiNgheVM": {
         "type": "object",
         "properties": {
           "maCauHoi": {
@@ -421,6 +728,26 @@
           },
           "anhDaiDien": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTienDoHocTapVM": {
+        "type": "object",
+        "properties": {
+          "trangThai": {
+            "type": "string",
+            "nullable": true
+          },
+          "thoiGianHocPhut": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "phanTramHoanThanh": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

@@ -9,38 +9,39 @@ namespace ToeicWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BaiDocController : ControllerBase
+    public class BaiNgheController : ControllerBase
     {
         private readonly SupabaseDbContext _context;
 
-        public BaiDocController(SupabaseDbContext context)
+        public BaiNgheController(SupabaseDbContext context)
         {
             _context = context;
         }
 
-        // ✅ LẤY DANH SÁCH TẤT CẢ BÀI ĐỌC
+        // ✅ LẤY DANH SÁCH TẤT CẢ BÀI NGHE
         [HttpGet]
-        public async Task<IActionResult> GetAllBaiDoc()
+        public async Task<IActionResult> GetAllBaiNghe()
         {
             try
             {
-                var baiDocs = await _context.BaiDocs
-                    .Select(b => new BaiDocDTO
+                var baiNghes = await _context.BaiNghes
+                    .Select(b => new BaiNgheDTO
                     {
-                        MaBaiDoc = b.MaBaiDoc,
+                        MaBaiNghe = b.MaBaiNghe,
                         MaBai = b.MaBai,
                         TieuDe = b.TieuDe,
                         DoKho = b.DoKho,
                         NgayTao = b.NgayTao,
-                        DuongDanFileTxt = b.DuongDanFileTxt
+                        DuongDanAudio = b.DuongDanAudio,
+                        BanGhiAm = b.BanGhiAm
                     })
                     .ToListAsync();
 
                 return Ok(new
                 {
-                    message = "Danh sách bài đọc",
-                    total = baiDocs.Count,
-                    data = baiDocs
+                    message = "Danh sách bài nghe",
+                    total = baiNghes.Count,
+                    data = baiNghes
                 });
             }
             catch (Exception ex)
@@ -49,51 +50,51 @@ namespace ToeicWeb.Controllers
             }
         }
 
-        // ✅ LẤY CHI TIẾT BÀI ĐỌC (Bao gồm Nội Dung + Câu Hỏi + Đáp Án)
-        [HttpGet("{maBaiDoc}")]
-        public async Task<IActionResult> GetBaiDocDetail(string maBaiDoc)
+        // ✅ LẤY CHI TIẾT BÀI NGHE (Bao gồm Nội Dung + Câu Hỏi + Đáp Án)
+        [HttpGet("{maBaiNghe}")]
+        public async Task<IActionResult> GetBaiNgheDetail(string maBaiNghe)
         {
             try
             {
-                var baiDoc = await _context.BaiDocs
-                    .FirstOrDefaultAsync(b => b.MaBaiDoc == maBaiDoc);
+                var baiNghe = await _context.BaiNghes
+                    .FirstOrDefaultAsync(b => b.MaBaiNghe == maBaiNghe);
 
-                if (baiDoc == null)
-                    return NotFound(new { message = "Bài đọc không tồn tại!" });
+                if (baiNghe == null)
+                    return NotFound(new { message = "Bài nghe không tồn tại!" });
 
-                // Lấy câu hỏi của bài đọc
-                var cauHois = await _context.CauHoiDocs
-                    .Where(c => c.MaBaiDoc == maBaiDoc)
-                    .Select(c => new CauHoiDocDTO
+                // Lấy câu hỏi của bài nghe
+                var cauHois = await _context.CauHoiNghes
+                    .Where(c => c.MaBaiNghe == maBaiNghe)
+                    .Select(c => new CauHoiNgheDTO
                     {
                         MaCauHoi = c.MaCauHoi,
                         NoiDungCauHoi = c.NoiDungCauHoi,
                         GiaiThich = c.GiaiThich,
                         Diem = c.Diem ?? 1,
-                        ThuTuHienThi = c.ThuTuHienThi
+                        ThuTuHienThi = (int)c.ThuTuHienThi
                     })
                     .OrderBy(c => c.ThuTuHienThi)
                     .ToListAsync();
 
                 // Lấy đáp án cho mỗi câu hỏi
-                var cauHoisWithAnswers = new List<CauHoiDocWithAnswersDTO>();
+                var cauHoisWithAnswers = new List<CauHoiNgheWithAnswersDTO>();
                 foreach (var cauHoi in cauHois)
                 {
-                    var dapAns = await _context.DapAnDocs
+                    var dapAns = await _context.DapAnNghes
                         .Where(d => d.MaCauHoi == cauHoi.MaCauHoi)
-                        .Select(d => new DapAnDocDTO
+                        .Select(d => new DapAnNgheDTO
                         {
                             MaDapAn = d.MaDapAn,
                             MaCauHoi = d.MaCauHoi,
                             NhanDapAn = d.NhanDapAn.ToString(),
                             NoiDungDapAn = d.NoiDungDapAn,
-                            ThuTuHienThi = d.ThuTuHienThi,
+                            ThuTuHienThi = (int)d.ThuTuHienThi,
                             LaDapAnDung = d.LaDapAnDung ?? false
                         })
                         .OrderBy(d => d.ThuTuHienThi)
                         .ToListAsync();
 
-                    cauHoisWithAnswers.Add(new CauHoiDocWithAnswersDTO
+                    cauHoisWithAnswers.Add(new CauHoiNgheWithAnswersDTO
                     {
                         MaCauHoi = cauHoi.MaCauHoi,
                         NoiDungCauHoi = cauHoi.NoiDungCauHoi,
@@ -106,13 +107,13 @@ namespace ToeicWeb.Controllers
 
                 return Ok(new
                 {
-                    maBaiDoc = baiDoc.MaBaiDoc,
-                    maBai = baiDoc.MaBai,
-                    tieuDe = baiDoc.TieuDe,
-                    doKho = baiDoc.DoKho,
-                    noiDung = baiDoc.NoiDung,
-                    duongDanFileTxt = baiDoc.DuongDanFileTxt,
-                    ngayTao = baiDoc.NgayTao,
+                    maBaiNghe = baiNghe.MaBaiNghe,
+                    maBai = baiNghe.MaBai,
+                    tieuDe = baiNghe.TieuDe,
+                    doKho = baiNghe.DoKho,
+                    duongDanAudio = baiNghe.DuongDanAudio,
+                    banGhiAm = baiNghe.BanGhiAm,
+                    ngayTao = baiNghe.NgayTao,
                     tongCauHoi = cauHoisWithAnswers.Count,
                     cauHois = cauHoisWithAnswers
                 });
@@ -123,10 +124,10 @@ namespace ToeicWeb.Controllers
             }
         }
 
-        // ✅ NỘP BÀI ĐỌC (Yêu cầu xác thực)
+        // ✅ NỘP BÀI NGHE (Yêu cầu xác thực)
         [Authorize]
-        [HttpPost("submit/{maBaiDoc}")]
-        public async Task<IActionResult> SubmitBaiDoc(string maBaiDoc, [FromBody] SubmitBaiDocVM model)
+        [HttpPost("submit/{maBaiNghe}")]
+        public async Task<IActionResult> SubmitBaiNghe(string maBaiNghe, [FromBody] SubmitBaiNgheVM model)
         {
             try
             {
@@ -135,16 +136,16 @@ namespace ToeicWeb.Controllers
                 if (string.IsNullOrEmpty(maNd))
                     return Unauthorized(new { message = "Không tìm thấy mã người dùng trong token!" });
 
-                // 🔍 Kiểm tra bài đọc
-                var baiDoc = await _context.BaiDocs
-                    .FirstOrDefaultAsync(b => b.MaBaiDoc == maBaiDoc);
+                // 🔍 Kiểm tra bài nghe
+                var baiNghe = await _context.BaiNghes
+                    .FirstOrDefaultAsync(b => b.MaBaiNghe == maBaiNghe);
 
-                if (baiDoc == null)
-                    return NotFound(new { message = "Bài đọc không tồn tại!" });
+                if (baiNghe == null)
+                    return NotFound(new { message = "Bài nghe không tồn tại!" });
 
                 // 🔍 Lấy danh sách câu hỏi
-                var cauHois = await _context.CauHoiDocs
-                    .Where(c => c.MaBaiDoc == maBaiDoc)
+                var cauHois = await _context.CauHoiNghes
+                    .Where(c => c.MaBaiNghe == maBaiNghe)
                     .ToListAsync();
 
                 if (cauHois.Count == 0)
@@ -163,7 +164,7 @@ namespace ToeicWeb.Controllers
                         continue;
 
                     // Lấy đáp án đúng
-                    var dapAnDung = await _context.DapAnDocs
+                    var dapAnDung = await _context.DapAnNghes
                         .FirstOrDefaultAsync(d => d.MaCauHoi == tl.MaCauHoi && d.LaDapAnDung == true);
 
                     bool dungSai = dapAnDung?.MaDapAn == tl.MaDapAn;
@@ -179,7 +180,7 @@ namespace ToeicWeb.Controllers
                     });
 
                     // ✅ Lưu từng câu trả lời vào DB
-                    var traLoiEntity = new TOEICWEB.Models.TraLoiHocVienDoc
+                    var traLoiEntity = new TOEICWEB.Models.TraLoiHocVienNghe
                     {
                         MaNd = maNd,
                         MaCauHoi = tl.MaCauHoi,
@@ -187,16 +188,16 @@ namespace ToeicWeb.Controllers
                         DungSai = dungSai,
                         NgayTao = DateTime.Now
                     };
-                    _context.TraLoiHocVienDocs.Add(traLoiEntity);
+                    _context.TraLoiHocVienNghes.Add(traLoiEntity);
                 }
 
                 await _context.SaveChangesAsync();
 
                 // ✅ Lưu kết quả tổng
                 double phanTram = ((double)diem / (tongCauHoi * 1)) * 100.0;
-                var ketQua = new TOEICWEB.Models.KetQuaBaiDoc
+                var ketQua = new TOEICWEB.Models.KetQuaBaiNghe
                 {
-                    MaBaiDoc = maBaiDoc,
+                    MaBaiNghe = maBaiNghe,
                     MaNd = maNd,
                     Diem = diem,
                     DiemToiDa = tongCauHoi,
@@ -205,7 +206,7 @@ namespace ToeicWeb.Controllers
                     NgayNop = DateTime.Now
                 };
 
-                _context.KetQuaBaiDocs.Add(ketQua);
+                _context.KetQuaBaiNghes.Add(ketQua);
                 await _context.SaveChangesAsync();
 
                 return Ok(new
@@ -224,72 +225,10 @@ namespace ToeicWeb.Controllers
         }
 
         // ✅ LẤY LỊCH SỬ BÀI LÀM (Yêu cầu xác thực)
-        // API 1: Lấy tất cả lịch sử bài đọc của người dùng hiện tại
+        // API 1: Lấy tất cả lịch sử bài nghe của người dùng hiện tại
         [Authorize]
         [HttpGet("history")]
-        public async Task<IActionResult> GetAllBaiDocHistory()
-        {
-            try
-            {
-                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-
-                if (string.IsNullOrEmpty(maNd))
-                {
-                    return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
-                }
-
-                var ketQuas = await _context.KetQuaBaiDocs
-                    .Where(k => k.MaNd == maNd)
-                    .Select(k => new
-                    {
-                        maBaiDoc = k.MaBaiDoc,
-                        diem = k.Diem ?? 0,
-                        diemToiDa = k.DiemToiDa ?? 1,
-                        phanTram = k.PhanTram,
-                        thang = Math.Round(
-                            (decimal)((k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
-                            2
-                        ),
-                        thoiGianLamGiay = k.ThoiGianLamGiay ?? 0,
-                        thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
-                        lanLamThu = k.LanLamThu ?? 1,
-                        ngayNop = k.NgayNop,
-                        ngayNopFormatted = k.NgayNop.HasValue ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm") : ""
-                    })
-                    .OrderByDescending(k => k.ngayNop)
-                    .ToListAsync();
-
-                if (!ketQuas.Any())
-                {
-                    return Ok(new
-                    {
-                        message = "Bạn chưa làm bài đọc nào",
-                        total = 0,
-                        data = new List<object>()
-                    });
-                }
-
-                return Ok(new
-                {
-                    message = "Lịch sử bài đọc",
-                    total = ketQuas.Count,
-                    data = ketQuas
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Lỗi khi lấy lịch sử bài đọc!",
-                    error = ex.Message
-                });
-            }
-        }
-
-        // API 2: Lấy lịch sử bài đọc cụ thể theo mã bài của người dùng hiện tại
-        [Authorize]
-        [HttpGet("history/{maBaiDoc}")]
-        public async Task<IActionResult> GetBaiDocHistory(string maBaiDoc)
+        public async Task<IActionResult> GetAllBaiNgheHistory()
         {
             try
             {
@@ -300,19 +239,11 @@ namespace ToeicWeb.Controllers
                     return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
                 }
 
-                // Kiểm tra bài đọc có tồn tại không
-                var baiDoc = await _context.BaiDocs.FirstOrDefaultAsync(b => b.MaBaiDoc == maBaiDoc);
-                if (baiDoc == null)
-                {
-                    return NotFound(new { message = "Bài đọc không tồn tại" });
-                }
-
-                var ketQuas = await _context.KetQuaBaiDocs
-                    .Where(k => k.MaBaiDoc == maBaiDoc && k.MaNd == maNd)
+                var ketQuas = await _context.KetQuaBaiNghes
+                    .Where(k => k.MaNd == maNd)
                     .Select(k => new
                     {
-                        tieuDe = baiDoc.TieuDe,
-                        doKho = baiDoc.DoKho,
+                        maBaiNghe = k.MaBaiNghe,
                         diem = k.Diem ?? 0,
                         diemToiDa = k.DiemToiDa ?? 1,
                         phanTram = k.PhanTram,
@@ -333,7 +264,7 @@ namespace ToeicWeb.Controllers
                 {
                     return Ok(new
                     {
-                        message = $"Bạn chưa làm bài đọc '{baiDoc.TieuDe}'",
+                        message = "Bạn chưa làm bài nghe nào",
                         total = 0,
                         data = new List<object>()
                     });
@@ -341,7 +272,7 @@ namespace ToeicWeb.Controllers
 
                 return Ok(new
                 {
-                    message = $"Lịch sử bài đọc '{baiDoc.TieuDe}'",
+                    message = "Lịch sử bài nghe",
                     total = ketQuas.Count,
                     data = ketQuas
                 });
@@ -350,16 +281,86 @@ namespace ToeicWeb.Controllers
             {
                 return StatusCode(500, new
                 {
-                    message = "Lỗi khi lấy lịch sử bài đọc!",
+                    message = "Lỗi khi lấy lịch sử bài nghe!",
                     error = ex.Message
                 });
             }
         }
 
-        // API 3: Lấy lịch sử bài đọc với thống kê tổng hợp
+        // API 2: Lấy lịch sử bài nghe cụ thể theo mã bài của người dùng hiện tại
+        [Authorize]
+        [HttpGet("history/{maBaiNghe}")]
+        public async Task<IActionResult> GetBaiNgheHistory(string maBaiNghe)
+        {
+            try
+            {
+                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(maNd))
+                {
+                    return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
+                }
+
+                // Kiểm tra bài nghe có tồn tại không
+                var baiNghe = await _context.BaiNghes.FirstOrDefaultAsync(b => b.MaBaiNghe == maBaiNghe);
+                if (baiNghe == null)
+                {
+                    return NotFound(new { message = "Bài nghe không tồn tại" });
+                }
+
+                var ketQuas = await _context.KetQuaBaiNghes
+                    .Where(k => k.MaBaiNghe == maBaiNghe && k.MaNd == maNd)
+                    .Select(k => new
+                    {
+                        tieuDe = baiNghe.TieuDe,
+                        doKho = baiNghe.DoKho,
+                        diem = k.Diem ?? 0,
+                        diemToiDa = k.DiemToiDa ?? 1,
+                        phanTram = k.PhanTram,
+                        thang = Math.Round(
+                            (decimal)((k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
+                            2
+                        ),
+                        thoiGianLamGiay = k.ThoiGianLamGiay ?? 0,
+                        thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
+                        lanLamThu = k.LanLamThu ?? 1,
+                        ngayNop = k.NgayNop,
+                        ngayNopFormatted = k.NgayNop.HasValue ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm") : ""
+                    })
+                    .OrderByDescending(k => k.ngayNop)
+                    .ToListAsync();
+
+                if (!ketQuas.Any())
+                {
+                    return Ok(new
+                    {
+                        message = $"Bạn chưa làm bài nghe '{baiNghe.TieuDe}'",
+                        total = 0,
+                        data = new List<object>()
+                    });
+                }
+
+                return Ok(new
+                {
+                    message = $"Lịch sử bài nghe '{baiNghe.TieuDe}'",
+                    total = ketQuas.Count,
+                    data = ketQuas
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Lỗi khi lấy lịch sử bài nghe!",
+                    error = ex.Message
+                });
+            }
+        }
+
+        // API 3: Lấy lịch sử bài nghe với thống kê tổng hợp
         [Authorize]
         [HttpGet("history/stats/summary")]
-        public async Task<IActionResult> GetBaiDocHistoryStats()
+        public async Task<IActionResult> GetBaiNgheHistoryStats()
         {
             try
             {
@@ -370,7 +371,7 @@ namespace ToeicWeb.Controllers
                     return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
                 }
 
-                var ketQuas = await _context.KetQuaBaiDocs
+                var ketQuas = await _context.KetQuaBaiNghes
                     .Where(k => k.MaNd == maNd)
                     .ToListAsync();
 
@@ -378,7 +379,7 @@ namespace ToeicWeb.Controllers
                 {
                     return Ok(new
                     {
-                        message = "Bạn chưa làm bài đọc nào",
+                        message = "Bạn chưa làm bài nghe nào",
                         tongBaiDaLam = 0,
                         diemTrungBinh = 0,
                         thoiGianHocTongCong = 0,
@@ -395,10 +396,10 @@ namespace ToeicWeb.Controllers
                 var thoiGianTongCong = ketQuas.Sum(k => k.ThoiGianLamGiay ?? 0);
 
                 var baiHoacTotNhat = ketQuas
-                    .GroupBy(k => k.MaBaiDoc)
+                    .GroupBy(k => k.MaBaiNghe)
                     .Select(g => new
                     {
-                        maBaiDoc = g.Key,
+                        maBaiNghe = g.Key,
                         diemCaoNhat = g.Max(k => k.Diem),
                         soLanLam = g.Count(),
                         diemTrungBinh = Math.Round(
@@ -409,11 +410,11 @@ namespace ToeicWeb.Controllers
                     .OrderByDescending(x => x.diemCaoNhat)
                     .FirstOrDefault();
 
-                var detail = await _context.KetQuaBaiDocs
+                var detail = await _context.KetQuaBaiNghes
                     .Where(k => k.MaNd == maNd)
                     .Select(k => new
                     {
-                        maBaiDoc = k.MaBaiDoc,
+                        maBaiNghe = k.MaBaiNghe,
                         diem = k.Diem ?? 0,
                         diemToiDa = k.DiemToiDa ?? 1,
                         thang = Math.Round(
@@ -429,7 +430,7 @@ namespace ToeicWeb.Controllers
 
                 return Ok(new
                 {
-                    message = "Thống kê lịch sử bài đọc",
+                    message = "Thống kê lịch sử bài nghe",
                     tongBaiDaLam = ketQuas.Count,
                     diemTrungBinh = diemTrungBinh,
                     thoiGianHocTongCong = thoiGianTongCong,
@@ -447,6 +448,5 @@ namespace ToeicWeb.Controllers
                 });
             }
         }
-
     }
 }
