@@ -897,7 +897,50 @@ public partial class SupabaseDbContext : DbContext
             entity.Property(e => e.TongSoBai).HasColumnName("tong_so_bai");
             entity.Property(e => e.TongThoiGianHoc).HasColumnName("tong_thoi_gian_hoc");
         });
+        modelBuilder.Entity<TraLoiHocVienDoc>(entity =>
+        {
+            entity.HasKey(e => e.MaTraLoi).HasName("tra_loi_hoc_vien_doc_pkey");
+            entity.ToTable("tra_loi_hoc_vien_doc");
 
+            entity.Property(e => e.MaTraLoi).HasColumnName("ma_tra_loi");
+            entity.Property(e => e.DungSai).HasColumnName("dung_sai");
+            entity.Property(e => e.MaCauHoi)
+                .HasMaxLength(10)
+                .HasColumnName("ma_cau_hoi");
+            entity.Property(e => e.MaDapAnChon).HasColumnName("ma_dap_an_chon");
+            entity.Property(e => e.MaKetQua).HasColumnName("ma_ket_qua");
+            entity.Property(e => e.NgayTao)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("ngay_tao");
+
+            // THÊM CỘT ma_nd
+            entity.Property(e => e.MaNd)
+                .HasMaxLength(10)
+                .HasColumnName("ma_nd");
+
+            // CÁC FK
+            entity.HasOne(d => d.MaCauHoiNavigation)
+                .WithMany(p => p.TraLoiHocVienDocs)
+                .HasForeignKey(d => d.MaCauHoi)
+                .HasConstraintName("tra_loi_hoc_vien_doc_ma_cau_hoi_fkey");
+
+            entity.HasOne(d => d.MaDapAnChonNavigation)
+                .WithMany(p => p.TraLoiHocVienDocs)
+                .HasForeignKey(d => d.MaDapAnChon)
+                .HasConstraintName("tra_loi_hoc_vien_doc_ma_dap_an_chon_fkey");
+
+            entity.HasOne(d => d.MaKetQuaNavigation)
+                .WithMany(p => p.TraLoiHocVienDocs)
+                .HasForeignKey(d => d.MaKetQua)
+                .HasConstraintName("tra_loi_hoc_vien_doc_ma_ket_qua_fkey");
+
+            // FK CHO MA_ND → NGƯỜI DÙNG
+            entity.HasOne(d => d.MaNdNavigation)
+                .WithMany(p => p.TraLoiHocVienDocs)
+                .HasForeignKey(d => d.MaNd)
+                .HasConstraintName("tra_loi_hoc_vien_doc_ma_nd_fkey");
+        });
         modelBuilder.Entity<VideoBaiHoc>(entity =>
         {
             entity.HasKey(e => e.MaVideo).HasName("video_bai_hoc_pkey");
@@ -926,7 +969,104 @@ public partial class SupabaseDbContext : DbContext
                 .HasForeignKey(d => d.MaBai)
                 .HasConstraintName("video_bai_hoc_ma_bai_fkey");
         });
+        modelBuilder.Entity<TraLoiHocVienDoc>(entity =>
+{
+    entity.HasKey(e => e.MaTraLoi).HasName("tra_loi_hoc_vien_doc_pkey");
+    entity.ToTable("tra_loi_hoc_vien_doc");
 
+    entity.Property(e => e.MaTraLoi).HasColumnName("ma_tra_loi");
+    entity.Property(e => e.DungSai).HasColumnName("dung_sai");
+    entity.Property(e => e.MaCauHoi)
+        .HasMaxLength(10)
+        .HasColumnName("ma_cau_hoi");
+    entity.Property(e => e.MaDapAnChon).HasColumnName("ma_dap_an_chon");
+    entity.Property(e => e.MaKetQua).HasColumnName("ma_ket_qua");
+    entity.Property(e => e.NgayTao)
+        .HasDefaultValueSql("CURRENT_TIMESTAMP")
+        .HasColumnType("timestamp without time zone")
+        .HasColumnName("ngay_tao");
+
+    // THÊM CỘT ma_nd
+    entity.Property(e => e.MaNd)
+        .HasMaxLength(10)
+        .HasColumnName("ma_nd");
+
+    // CÁC FK
+    entity.HasOne(d => d.MaCauHoiNavigation)
+        .WithMany(p => p.TraLoiHocVienDocs)
+        .HasForeignKey(d => d.MaCauHoi)
+        .HasConstraintName("tra_loi_hoc_vien_doc_ma_cau_hoi_fkey");
+
+    entity.HasOne(d => d.MaDapAnChonNavigation)
+        .WithMany(p => p.TraLoiHocVienDocs)
+        .HasForeignKey(d => d.MaDapAnChon)
+        .HasConstraintName("tra_loi_hoc_vien_doc_ma_dap_an_chon_fkey");
+
+    entity.HasOne(d => d.MaKetQuaNavigation)
+        .WithMany(p => p.TraLoiHocVienDocs)
+        .HasForeignKey(d => d.MaKetQua)
+        .HasConstraintName("tra_loi_hoc_vien_doc_ma_ket_qua_fkey");
+
+    // FK CHO MA_ND → NGƯỜI DÙNG
+    entity.HasOne(d => d.MaNdNavigation)
+        .WithMany(p => p.TraLoiHocVienDocs)
+        .HasForeignKey(d => d.MaNd)
+        .HasConstraintName("tra_loi_hoc_vien_doc_ma_nd_fkey");
+});
+        modelBuilder.Entity<TraLoiHocVienNghe>(entity =>
+        {
+            entity.ToTable("tra_loi_hoc_vien_nghe");
+
+            entity.HasKey(e => e.MaTraLoi);
+
+            entity.Property(e => e.MaTraLoi).HasColumnName("ma_tra_loi");
+            entity.Property(e => e.MaKetQua).HasColumnName("ma_ket_qua");
+            entity.Property(e => e.MaCauHoi).HasColumnName("ma_cau_hoi");
+            entity.Property(e => e.MaDapAnChon).HasColumnName("ma_dap_an_chon");
+            entity.Property(e => e.DungSai).HasColumnName("dung_sai");
+            entity.Property(e => e.NgayTao).HasColumnName("ngay_tao");
+            entity.Property(e => e.MaNd).HasColumnName("ma_nd");
+
+            // Quan hệ với NguoiDung
+            entity.HasOne(d => d.MaNdNavigation)
+                  .WithMany(p => p.TraLoiHocVienNghes)  // Nếu có ICollection trong NguoiDung
+                  .HasForeignKey(d => d.MaNd)
+                  .HasConstraintName("fk_tra_loi_hoc_vien_nghe_nguoi_dung");
+        });
+        modelBuilder.Entity<KetQuaBaiNghe>(entity =>
+        {
+            entity.ToTable("ket_qua_bai_nghe");
+
+            entity.HasKey(e => e.MaKetQua);
+
+            entity.Property(e => e.MaKetQua).HasColumnName("ma_ket_qua");
+            entity.Property(e => e.MaNd).HasColumnName("ma_nd");
+            entity.Property(e => e.MaBaiNghe).HasColumnName("ma_bai_nghe");
+            entity.Property(e => e.Diem).HasColumnName("diem");
+            entity.Property(e => e.DiemToiDa).HasColumnName("diem_toi_da");
+            entity.Property(e => e.PhanTram).HasColumnName("phan_tram");
+            entity.Property(e => e.ThoiGianLamGiay).HasColumnName("thoi_gian_lam_giay");
+            entity.Property(e => e.LanLamThu).HasColumnName("lan_lam_thu");
+            entity.Property(e => e.NgayNop).HasColumnName("ngay_nop");
+
+            // Quan hệ với BaiNghe
+            entity.HasOne(d => d.MaBaiNgheNavigation)
+                  .WithMany(p => p.KetQuaBaiNghes)
+                  .HasForeignKey(d => d.MaBaiNghe)
+                  .HasConstraintName("fk_ket_qua_bai_nghe_bai_nghe");
+
+            // Quan hệ với NguoiDung
+            entity.HasOne(d => d.MaNdNavigation)
+                  .WithMany(p => p.KetQuaBaiNghes)
+                  .HasForeignKey(d => d.MaNd)
+                  .HasConstraintName("fk_ket_qua_bai_nghe_nguoi_dung");
+
+            // Quan hệ 1-n: KetQua → TraLoiHocVienNghe
+            entity.HasMany(d => d.TraLoiHocVienNghes)
+                  .WithOne(p => p.MaKetQuaNavigation)
+                  .HasForeignKey(p => p.MaKetQua)
+                  .HasConstraintName("fk_tra_loi_nghe_ket_qua");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 

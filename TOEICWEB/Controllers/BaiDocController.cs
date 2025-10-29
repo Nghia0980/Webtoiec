@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TOEICWEB.Data;
 using TOEICWEB.Models;
 using TOEICWEB.ViewModels;
+using System.Security.Claims;
 
 namespace ToeicWeb.Controllers
 {
@@ -18,7 +19,7 @@ namespace ToeicWeb.Controllers
             _context = context;
         }
 
-        // ✅ LẤY DANH SÁCH TẤT CẢ BÀI ĐỌC
+        // LẤY DANH SÁCH TẤT CẢ BÀI ĐỌC
         [HttpGet]
         public async Task<IActionResult> GetAllBaiDoc()
         {
@@ -49,7 +50,7 @@ namespace ToeicWeb.Controllers
             }
         }
 
-        // ✅ LẤY CHI TIẾT BÀI ĐỌC (Bao gồm Nội Dung + Câu Hỏi + Đáp Án)
+        // LẤY CHI TIẾT BÀI ĐỌC (Nội dung + Câu hỏi + Đáp án)
         [HttpGet("{maBaiDoc}")]
         public async Task<IActionResult> GetBaiDocDetail(string maBaiDoc)
         {
@@ -61,7 +62,6 @@ namespace ToeicWeb.Controllers
                 if (baiDoc == null)
                     return NotFound(new { message = "Bài đọc không tồn tại!" });
 
-                // Lấy câu hỏi của bài đọc
                 var cauHois = await _context.CauHoiDocs
                     .Where(c => c.MaBaiDoc == maBaiDoc)
                     .Select(c => new CauHoiDocDTO
@@ -75,7 +75,6 @@ namespace ToeicWeb.Controllers
                     .OrderBy(c => c.ThuTuHienThi)
                     .ToListAsync();
 
-                // Lấy đáp án cho mỗi câu hỏi
                 var cauHoisWithAnswers = new List<CauHoiDocWithAnswersDTO>();
                 foreach (var cauHoi in cauHois)
                 {
@@ -123,138 +122,161 @@ namespace ToeicWeb.Controllers
             }
         }
 
-        // ✅ NỘP BÀI ĐỌC (Yêu cầu xác thực)
+        // NỘP BÀI ĐỌC - ĐÃ FIX + TỐI ƯU + TRANSACTION
         [Authorize]
         [HttpPost("submit/{maBaiDoc}")]
         public async Task<IActionResult> SubmitBaiDoc(string maBaiDoc, [FromBody] SubmitBaiDocVM model)
         {
+            if (model?.TraLois == null || !model.TraLois.Any())
+                return BadRequest(new { message = "Dữ liệu trả lời không hợp lệ!" });
+
+            var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(maNd))
+                return Unauthorized(new { message = "Không tìm thấy thông tin người dùng!" });
+
             try
             {
-                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrEmpty(maNd))
-                    return Unauthorized(new { message = "Không tìm thấy mã người dùng trong token!" });
-
-                // 🔍 Kiểm tra bài đọc
                 var baiDoc = await _context.BaiDocs
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(b => b.MaBaiDoc == maBaiDoc);
 
                 if (baiDoc == null)
                     return NotFound(new { message = "Bài đọc không tồn tại!" });
 
-                // 🔍 Lấy danh sách câu hỏi
-                var cauHois = await _context.CauHoiDocs
+                var cauHoiDapAnDung = await _context.CauHoiDocs
                     .Where(c => c.MaBaiDoc == maBaiDoc)
+                    .Select(c => new
+                    {
+                        c.MaCauHoi,
+                        Diem = c.Diem ?? 1,
+                        DapAnDung = _context.DapAnDocs
+                            .Where(d => d.MaCauHoi == c.MaCauHoi && d.LaDapAnDung == true)
+                            .Select(d => d.MaDapAn)
+                            .FirstOrDefault()
+                    })
                     .ToListAsync();
 
-                if (cauHois.Count == 0)
-                    return BadRequest(new { message = "Bài này không có câu hỏi!" });
+                if (!cauHoiDapAnDung.Any())
+                    return BadRequest(new { message = "Bài đọc không có câu hỏi!" });
 
-                int diem = 0;
-                int tongCauHoi = cauHois.Count;
-                var traLoiKetQua = new List<object>();
+                var traLoiEntities = new List<TraLoiHocVienDoc>();
+                var chiTietKetQua = new List<object>();
+                int diem = 0, diemToiDa = 0;
 
-                // ✅ Duyệt qua danh sách trả lời học viên gửi lên
-                foreach (var tl in model.TraLois)
+                foreach (var ch in cauHoiDapAnDung)
                 {
-                    // Lấy câu hỏi tương ứng
-                    var cauHoi = cauHois.FirstOrDefault(c => c.MaCauHoi == tl.MaCauHoi);
-                    if (cauHoi == null)
-                        continue;
+                    diemToiDa += ch.Diem;
+                    var traLoi = model.TraLois.FirstOrDefault(t => t.MaCauHoi == ch.MaCauHoi);
+                    var maDapAnChon = traLoi?.MaDapAn;
+                    var dungSai = maDapAnChon.HasValue && maDapAnChon == ch.DapAnDung;
 
-                    // Lấy đáp án đúng
-                    var dapAnDung = await _context.DapAnDocs
-                        .FirstOrDefaultAsync(d => d.MaCauHoi == tl.MaCauHoi && d.LaDapAnDung == true);
+                    if (dungSai) diem += ch.Diem;
 
-                    bool dungSai = dapAnDung?.MaDapAn == tl.MaDapAn;
-                    if (dungSai)
-                        diem += cauHoi.Diem ?? 1;
-
-                    traLoiKetQua.Add(new
+                    chiTietKetQua.Add(new
                     {
-                        maCauHoi = tl.MaCauHoi,
-                        maDapAnChon = tl.MaDapAn,
-                        dungSai = dungSai,
-                        ngayTao = DateTime.Now
+                        maCauHoi = ch.MaCauHoi,
+                        maDapAnChon,
+                        dapAnDung = ch.DapAnDung,
+                        dungSai,
+                        diemCauHoi = ch.Diem
                     });
 
-                    // ✅ Lưu từng câu trả lời vào DB
-                    var traLoiEntity = new TOEICWEB.Models.TraLoiHocVienDoc
+                    traLoiEntities.Add(new TraLoiHocVienDoc
                     {
                         MaNd = maNd,
-                        MaCauHoi = tl.MaCauHoi,
-                        MaDapAnChon = tl.MaDapAn,
+                        MaCauHoi = ch.MaCauHoi,
+                        MaDapAnChon = maDapAnChon,
                         DungSai = dungSai,
                         NgayTao = DateTime.Now
-                    };
-                    _context.TraLoiHocVienDocs.Add(traLoiEntity);
+                    });
                 }
 
-                await _context.SaveChangesAsync();
+                var phanTram = diemToiDa > 0 ? Math.Round((double)diem / diemToiDa * 100, 2) : 0;
 
-                // ✅ Lưu kết quả tổng
-                double phanTram = ((double)diem / (tongCauHoi * 1)) * 100.0;
-                var ketQua = new TOEICWEB.Models.KetQuaBaiDoc
+                var lanLamThu = await _context.KetQuaBaiDocs
+                    .CountAsync(k => k.MaBaiDoc == maBaiDoc && k.MaNd == maNd) + 1;
+
+                using var transaction = await _context.Database.BeginTransactionAsync();
+                try
                 {
-                    MaBaiDoc = maBaiDoc,
-                    MaNd = maNd,
-                    Diem = diem,
-                    DiemToiDa = tongCauHoi,
-                    PhanTram = Convert.ToDecimal(phanTram),
-                    ThoiGianLamGiay = model.ThoiGianLamGiay,
-                    NgayNop = DateTime.Now
-                };
+                    await _context.TraLoiHocVienDocs.AddRangeAsync(traLoiEntities);
 
-                _context.KetQuaBaiDocs.Add(ketQua);
-                await _context.SaveChangesAsync();
+                    var ketQua = new KetQuaBaiDoc
+                    {
+                        MaBaiDoc = maBaiDoc,
+                        MaNd = maNd,
+                        Diem = diem,
+                        DiemToiDa = diemToiDa,
+                        PhanTram = Convert.ToDecimal(phanTram),
+                        ThoiGianLamGiay = model.ThoiGianLamGiay,
+                        LanLamThu = lanLamThu,
+                        NgayNop = DateTime.Now
+                    };
+                    _context.KetQuaBaiDocs.Add(ketQua);
+
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception("Lỗi khi lưu vào DB: " + ex.Message);
+                }
 
                 return Ok(new
                 {
                     message = "Nộp bài thành công!",
-                    diem = diem,
-                    diemToiDa = tongCauHoi,
-                    phanTram = Math.Round(phanTram, 2),
-                    thanhCong = true
+                    maBaiDoc,
+                    diem,
+                    diemToiDa,
+                    phanTram,
+                    thoiGianLamGiay = model.ThoiGianLamGiay,
+                    lanLamThu,
+                    tongCauHoi = cauHoiDapAnDung.Count,
+                    soCauDung = chiTietKetQua.Count(x => (bool)x.GetType().GetProperty("dungSai").GetValue(x)),
+                    chiTiet = chiTietKetQua
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Lỗi khi nộp bài!", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Lỗi khi nộp bài!",
+                    error = ex.Message,
+                    innerError = ex.InnerException?.Message
+                });
             }
         }
 
-        // ✅ LẤY LỊCH SỬ BÀI LÀM (Yêu cầu xác thực)
-        // API 1: Lấy tất cả lịch sử bài đọc của người dùng hiện tại
+        // LẤY TẤT CẢ LỊCH SỬ BÀI ĐỌC CỦA NGƯỜI DÙNG
         [Authorize]
         [HttpGet("history")]
         public async Task<IActionResult> GetAllBaiDocHistory()
         {
             try
             {
-                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-
+                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(maNd))
-                {
                     return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
-                }
 
                 var ketQuas = await _context.KetQuaBaiDocs
                     .Where(k => k.MaNd == maNd)
+                    .Include(k => k.MaBaiDocNavigation)
                     .Select(k => new
                     {
                         maBaiDoc = k.MaBaiDoc,
+                        tieuDe = k.MaBaiDocNavigation.TieuDe,
+                        doKho = k.MaBaiDocNavigation.DoKho,
                         diem = k.Diem ?? 0,
                         diemToiDa = k.DiemToiDa ?? 1,
                         phanTram = k.PhanTram,
-                        thang = Math.Round(
-                            (decimal)((k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
-                            2
-                        ),
                         thoiGianLamGiay = k.ThoiGianLamGiay ?? 0,
                         thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
                         lanLamThu = k.LanLamThu ?? 1,
                         ngayNop = k.NgayNop,
-                        ngayNopFormatted = k.NgayNop.HasValue ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm") : ""
+                        ngayNopFormatted = k.NgayNop.HasValue
+                            ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm")
+                            : ""
                     })
                     .OrderByDescending(k => k.ngayNop)
                     .ToListAsync();
@@ -278,34 +300,24 @@ namespace ToeicWeb.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    message = "Lỗi khi lấy lịch sử bài đọc!",
-                    error = ex.Message
-                });
+                return StatusCode(500, new { message = "Lỗi!", error = ex.Message });
             }
         }
 
-        // API 2: Lấy lịch sử bài đọc cụ thể theo mã bài của người dùng hiện tại
+        // LẤY LỊCH SỬ BÀI ĐỌC CỤ THỂ
         [Authorize]
         [HttpGet("history/{maBaiDoc}")]
         public async Task<IActionResult> GetBaiDocHistory(string maBaiDoc)
         {
             try
             {
-                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
+                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(maNd))
-                {
-                    return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
-                }
+                    return BadRequest(new { message = "Không tìm thấy người dùng" });
 
-                // Kiểm tra bài đọc có tồn tại không
                 var baiDoc = await _context.BaiDocs.FirstOrDefaultAsync(b => b.MaBaiDoc == maBaiDoc);
                 if (baiDoc == null)
-                {
                     return NotFound(new { message = "Bài đọc không tồn tại" });
-                }
 
                 var ketQuas = await _context.KetQuaBaiDocs
                     .Where(k => k.MaBaiDoc == maBaiDoc && k.MaNd == maNd)
@@ -316,15 +328,13 @@ namespace ToeicWeb.Controllers
                         diem = k.Diem ?? 0,
                         diemToiDa = k.DiemToiDa ?? 1,
                         phanTram = k.PhanTram,
-                        thang = Math.Round(
-                            (decimal)((k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
-                            2
-                        ),
                         thoiGianLamGiay = k.ThoiGianLamGiay ?? 0,
                         thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
                         lanLamThu = k.LanLamThu ?? 1,
                         ngayNop = k.NgayNop,
-                        ngayNopFormatted = k.NgayNop.HasValue ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm") : ""
+                        ngayNopFormatted = k.NgayNop.HasValue
+                            ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm")
+                            : ""
                     })
                     .OrderByDescending(k => k.ngayNop)
                     .ToListAsync();
@@ -348,30 +358,24 @@ namespace ToeicWeb.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    message = "Lỗi khi lấy lịch sử bài đọc!",
-                    error = ex.Message
-                });
+                return StatusCode(500, new { message = "Lỗi!", error = ex.Message });
             }
         }
 
-        // API 3: Lấy lịch sử bài đọc với thống kê tổng hợp
+        // THỐNG KÊ TỔNG HỢP
         [Authorize]
         [HttpGet("history/stats/summary")]
         public async Task<IActionResult> GetBaiDocHistoryStats()
         {
             try
             {
-                var maNd = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
+                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(maNd))
-                {
-                    return BadRequest(new { message = "Không tìm thấy thông tin người dùng" });
-                }
+                    return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var ketQuas = await _context.KetQuaBaiDocs
                     .Where(k => k.MaNd == maNd)
+                    .Include(k => k.MaBaiDocNavigation)
                     .ToListAsync();
 
                 if (!ketQuas.Any())
@@ -382,71 +386,45 @@ namespace ToeicWeb.Controllers
                         tongBaiDaLam = 0,
                         diemTrungBinh = 0,
                         thoiGianHocTongCong = 0,
-                        baiHoacTotNhat = new { },
                         data = new List<object>()
                     });
                 }
 
                 var diemTrungBinh = Math.Round(
-                    ketQuas.Average(k => (double)(k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
-                    2
-                );
+                    ketQuas.Average(k => (double)(k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100), 2);
 
                 var thoiGianTongCong = ketQuas.Sum(k => k.ThoiGianLamGiay ?? 0);
 
-                var baiHoacTotNhat = ketQuas
-                    .GroupBy(k => k.MaBaiDoc)
-                    .Select(g => new
-                    {
-                        maBaiDoc = g.Key,
-                        diemCaoNhat = g.Max(k => k.Diem),
-                        soLanLam = g.Count(),
-                        diemTrungBinh = Math.Round(
-                            g.Average(k => (double)(k.Diem ?? 0)),
-                            2
-                        )
-                    })
-                    .OrderByDescending(x => x.diemCaoNhat)
-                    .FirstOrDefault();
-
-                var detail = await _context.KetQuaBaiDocs
-                    .Where(k => k.MaNd == maNd)
-                    .Select(k => new
-                    {
-                        maBaiDoc = k.MaBaiDoc,
-                        diem = k.Diem ?? 0,
-                        diemToiDa = k.DiemToiDa ?? 1,
-                        thang = Math.Round(
-                            (decimal)((k.Diem ?? 0) / (double)(k.DiemToiDa ?? 1) * 100),
-                            2
-                        ),
-                        thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
-                        lanLamThu = k.LanLamThu ?? 1,
-                        ngayNopFormatted = k.NgayNop.HasValue ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm") : ""
-                    })
-                    .OrderByDescending(k => k.ngayNopFormatted)
-                    .ToListAsync();
+                var detail = ketQuas.Select(k => new
+                {
+                    maBaiDoc = k.MaBaiDoc,
+                    tieuDe = k.MaBaiDocNavigation.TieuDe,
+                    doKho = k.MaBaiDocNavigation.DoKho,
+                    diem = k.Diem ?? 0,
+                    diemToiDa = k.DiemToiDa ?? 1,
+                    phanTram = k.PhanTram,
+                    thoiGianLamPhut = (k.ThoiGianLamGiay ?? 0) / 60,
+                    lanLamThu = k.LanLamThu ?? 1,
+                    ngayNopFormatted = k.NgayNop.HasValue
+                        ? k.NgayNop.Value.ToString("dd/MM/yyyy HH:mm")
+                        : ""
+                })
+                .OrderByDescending(k => k.ngayNopFormatted)
+                .ToList();
 
                 return Ok(new
                 {
                     message = "Thống kê lịch sử bài đọc",
                     tongBaiDaLam = ketQuas.Count,
-                    diemTrungBinh = diemTrungBinh,
-                    thoiGianHocTongCong = thoiGianTongCong,
+                    diemTrungBinh,
                     thoiGianHocPhut = thoiGianTongCong / 60,
-                    baiHoacTotNhat = baiHoacTotNhat,
                     data = detail
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    message = "Lỗi khi lấy thống kê!",
-                    error = ex.Message
-                });
+                return StatusCode(500, new { message = "Lỗi!", error = ex.Message });
             }
         }
-
     }
 }
