@@ -61,21 +61,39 @@ namespace ToeicWeb.Controllers
                 if (baiHoc == null)
                     return NotFound(new { message = "Bài học không tồn tại!" });
 
-                return Ok(new
+                // ✅ Lấy danh sách video thuộc bài học
+                var videos = await _context.VideoBaiHocs
+                    .Where(v => v.MaBai == maBai)
+                    .Select(v => new VideoBaiHocDTO
+                    {
+                        MaVideo = v.MaVideo,
+                        TieuDeVideo = v.TieuDeVideo,
+                        DuongDanVideo = v.DuongDanVideo,
+                        ThoiLuongGiay = v.ThoiLuongGiay,
+                        NgayTao = v.NgayTao
+                    })
+                    .ToListAsync();
+
+                // ✅ Ghép dữ liệu vào DTO
+                var result = new BaiHocDTO
                 {
-                    maBai = baiHoc.MaBai,
-                    maLoTrinh = baiHoc.MaLoTrinh,
-                    tenBai = baiHoc.TenBai,
-                    moTa = baiHoc.MoTa,
-                    thoiLuongPhut = baiHoc.ThoiLuongPhut ?? 0,
-                    soThuTu = baiHoc.SoThuTu,
-                    ngayTao = baiHoc.NgayTao
-                });
+                    MaBai = baiHoc.MaBai,
+                    MaLoTrinh = baiHoc.MaLoTrinh,
+                    TenBai = baiHoc.TenBai,
+                    MoTa = baiHoc.MoTa,
+                    ThoiLuongPhut = baiHoc.ThoiLuongPhut ?? 0,
+                    SoThuTu = baiHoc.SoThuTu,
+                    NgayTao = baiHoc.NgayTao,
+                    Videos = videos
+                };
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Lỗi khi lấy chi tiết bài học!", error = ex.Message });
             }
         }
+
     }
 }

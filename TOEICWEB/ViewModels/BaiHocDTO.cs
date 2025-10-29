@@ -9,5 +9,7 @@
         public int ThoiLuongPhut { get; set; }
         public int SoThuTu { get; set; }
         public DateTime? NgayTao { get; set; }
+        public List<VideoBaiHocDTO> Videos { get; set; } = new List<VideoBaiHocDTO>();
+
     }
 }

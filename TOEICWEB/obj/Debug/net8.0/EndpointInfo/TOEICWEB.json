@@ -472,6 +472,283 @@
         }
       }
     },
+    "/api/LoTrinh/co-san": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/co-san/{maLoTrinh}": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/dang-ky/{maLoTrinh}": {
+      "post": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/cua-toi": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/lich-hoc": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/tien-do/{maLoTrinh}": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/cap-nhat-trang-thai/{maLoTrinh}": {
+      "put": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrangThaiRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrangThaiRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrangThaiRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/huy-dang-ky/{maLoTrinh}": {
+      "delete": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maLoTrinh",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/cap-nhat-tien-do/{maBai}": {
+      "put": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "maBai",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapNhatTienDoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapNhatTienDoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CapNhatTienDoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/tong-quan": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoTrinh/log-hoat-dong": {
+      "get": {
+        "tags": [
+          "LoTrinh"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TienDoHocTap": {
       "get": {
         "tags": [
@@ -611,6 +888,20 @@
   },
   "components": {
     "schemas": {
+      "CapNhatTienDoRequest": {
+        "type": "object",
+        "properties": {
+          "phanTramHoanThanh": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "thoiGianHocPhut": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChangePasswordVM": {
         "type": "object",
         "properties": {
@@ -715,6 +1006,16 @@
           "maDapAn": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TrangThaiRequest": {
+        "type": "object",
+        "properties": {
+          "trangThai": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

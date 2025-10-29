@@ -302,6 +302,189 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "CapNhatTienDo",
+    "RelativePath": "api/LoTrinh/cap-nhat-tien-do/{maBai}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maBai",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "req",
+        "Type": "TOEICWEB.ViewModels.LoTrinh.Request.CapNhatTienDoRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "CapNhatTrangThai",
+    "RelativePath": "api/LoTrinh/cap-nhat-trang-thai/{maLoTrinh}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "req",
+        "Type": "TOEICWEB.ViewModels.LoTrinh.Request.TrangThaiRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetLoTrinhCoSan",
+    "RelativePath": "api/LoTrinh/co-san",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetLoTrinhCoSanDetail",
+    "RelativePath": "api/LoTrinh/co-san/{maLoTrinh}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetLoTrinhCuaToi",
+    "RelativePath": "api/LoTrinh/cua-toi",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "DangKyLoTrinh",
+    "RelativePath": "api/LoTrinh/dang-ky/{maLoTrinh}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "HuyDangKy",
+    "RelativePath": "api/LoTrinh/huy-dang-ky/{maLoTrinh}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetLichHocCuaToi",
+    "RelativePath": "api/LoTrinh/lich-hoc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "size",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetLog",
+    "RelativePath": "api/LoTrinh/log-hoat-dong",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "size",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetTienDoLoTrinh",
+    "RelativePath": "api/LoTrinh/tien-do/{maLoTrinh}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maLoTrinh",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TOEICWEB.Controllers.LoTrinhController",
+    "Method": "GetTongQuan",
+    "RelativePath": "api/LoTrinh/tong-quan",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ToeicWeb.Controllers.TienDoHocTapController",
     "Method": "GetAllTienDoHocTap",
     "RelativePath": "api/TienDoHocTap",
