@@ -55,13 +55,25 @@ namespace ToeicWeb.Controllers
         {
             try
             {
+                // 1. LẤY THÔNG TIN BÀI HỌC CHÍNH
                 var baiHoc = await _context.BaiHocs
-                    .FirstOrDefaultAsync(b => b.MaBai == maBai);
+                    .Where(b => b.MaBai == maBai)
+                    .Select(b => new
+                    {
+                        b.MaBai,
+                        b.MaLoTrinh,
+                        b.TenBai,
+                        b.MoTa,
+                        ThoiLuongPhut = b.ThoiLuongPhut ?? 0,
+                        b.SoThuTu,
+                        b.NgayTao
+                    })
+                    .FirstOrDefaultAsync();
 
                 if (baiHoc == null)
                     return NotFound(new { message = "Bài học không tồn tại!" });
 
-                // ✅ Lấy danh sách video thuộc bài học
+                // 2. LẤY TẤT CẢ VIDEO LIÊN QUAN
                 var videos = await _context.VideoBaiHocs
                     .Where(v => v.MaBai == maBai)
                     .Select(v => new VideoBaiHocDTO
@@ -72,22 +84,58 @@ namespace ToeicWeb.Controllers
                         ThoiLuongGiay = v.ThoiLuongGiay,
                         NgayTao = v.NgayTao
                     })
+                    .OrderBy(v => v.TieuDeVideo)
                     .ToListAsync();
 
-                // ✅ Ghép dữ liệu vào DTO
-                var result = new BaiHocDTO
-                {
-                    MaBai = baiHoc.MaBai,
-                    MaLoTrinh = baiHoc.MaLoTrinh,
-                    TenBai = baiHoc.TenBai,
-                    MoTa = baiHoc.MoTa,
-                    ThoiLuongPhut = baiHoc.ThoiLuongPhut ?? 0,
-                    SoThuTu = baiHoc.SoThuTu,
-                    NgayTao = baiHoc.NgayTao,
-                    Videos = videos
-                };
+                // 3. LẤY TẤT CẢ BÀI NGHE LIÊN QUAN
+                var baiNghes = await _context.BaiNghes
+                    .Where(bn => bn.MaBai == maBai)
+                    .Select(bn => new BaiNgheDTO
+                    {
+                        MaBaiNghe = bn.MaBaiNghe,
+                        MaBai = bn.MaBai,
+                        TieuDe = bn.TieuDe,
+                        DoKho = bn.DoKho,
+                        NgayTao = bn.NgayTao,
+                        DuongDanAudio = bn.DuongDanAudio,
+                        BanGhiAm = bn.BanGhiAm
+                    })
+                    .OrderBy(bn => bn.TieuDe)
+                    .ToListAsync();
 
-                return Ok(result);
+                // 4. LẤY TẤT CẢ BÀI ĐỌC LIÊN QUAN
+                var baiDocs = await _context.BaiDocs
+                    .Where(bd => bd.MaBai == maBai)
+                    .Select(bd => new BaiDocDTO
+                    {
+                        MaBaiDoc = bd.MaBaiDoc,
+                        MaBai = bd.MaBai,
+                        TieuDe = bd.TieuDe,
+                        DoKho = bd.DoKho,
+                        NgayTao = bd.NgayTao,
+                        DuongDanFileTxt = bd.DuongDanFileTxt
+                    })
+                    .OrderBy(bd => bd.TieuDe)
+                    .ToListAsync();
+
+                // 5. TRẢ VỀ KẾT QUẢ ĐẦY ĐỦ
+                return Ok(new
+                {
+                    message = "Chi tiết bài học",
+                    data = new
+                    {
+                        baiHoc.MaBai,
+                        baiHoc.MaLoTrinh,
+                        baiHoc.TenBai,
+                        baiHoc.MoTa,
+                        baiHoc.ThoiLuongPhut,
+                        baiHoc.SoThuTu,
+                        baiHoc.NgayTao,
+                        Videos = videos,
+                        BaiNghes = baiNghes,
+                        BaiDocs = baiDocs
+                    }
+                });
             }
             catch (Exception ex)
             {

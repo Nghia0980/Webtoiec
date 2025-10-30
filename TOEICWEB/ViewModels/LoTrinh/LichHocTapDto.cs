@@ -13,5 +13,7 @@
         public bool DaHoanThanh { get; set; }
         public int? ThuTuNgay { get; set; }
         public int? TuanHoc { get; set; }
+        public string? MaNd { get; set; }
+
     }
 }

@@ -21,6 +21,13 @@ namespace TOEICWEB.Controllers
             _context = context;
         }
 
+        // === Helper: Lấy ma_nd từ JWT (Supabase dùng "sub") ===
+        private string? GetMaNd()
+        {
+            return User.FindFirst("sub")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+
         #region 1. Lấy danh sách lộ trình có sẵn
         [HttpGet("co-san")]
         public async Task<IActionResult> GetLoTrinhCoSan()
@@ -44,7 +51,12 @@ namespace TOEICWEB.Controllers
                     .ThenBy(lt => lt.NgayTao)
                     .ToListAsync();
 
-                return Ok(new { message = "Danh sách lộ trình có sẵn", total = loTrinhs.Count, data = loTrinhs });
+                return Ok(new
+                {
+                    message = "Danh sách lộ trình có sẵn",
+                    total = loTrinhs.Count,
+                    data = loTrinhs
+                });
             }
             catch (Exception ex)
             {
@@ -75,7 +87,9 @@ namespace TOEICWEB.Controllers
                     })
                     .FirstOrDefaultAsync();
 
-                if (loTrinh == null) return NotFound(new { message = "Không tìm thấy lộ trình" });
+                if (loTrinh == null)
+                    return NotFound(new { message = "Không tìm thấy lộ trình" });
+
                 return Ok(new { message = "Chi tiết lộ trình", data = loTrinh });
             }
             catch (Exception ex)
@@ -85,18 +99,20 @@ namespace TOEICWEB.Controllers
         }
         #endregion
 
-        #region 3. Đăng ký lộ trình → Tạo lịch từ bài học thực tế
+        #region 3. Đăng ký lộ trình → Tự động tạo lịch học
         [Authorize]
         [HttpPost("dang-ky/{maLoTrinh}")]
         public async Task<IActionResult> DangKyLoTrinh(string maLoTrinh)
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd))
                     return BadRequest(new { message = "Không tìm thấy người dùng" });
 
-                var loTrinh = await _context.LoTrinhCoSans.FirstOrDefaultAsync(lt => lt.MaLoTrinh == maLoTrinh);
+                var loTrinh = await _context.LoTrinhCoSans
+                    .FirstOrDefaultAsync(lt => lt.MaLoTrinh == maLoTrinh);
+
                 if (loTrinh == null)
                     return NotFound(new { message = "Lộ trình không tồn tại" });
 
@@ -110,17 +126,21 @@ namespace TOEICWEB.Controllers
                     NgayDangKy = DateTime.Now,
                     TrangThai = "Đang học"
                 };
+
                 _context.DangKyLoTrinhs.Add(dangKy);
 
-                // Tạo lịch học từ bài học thực tế
-                await TaoLichHocTheoLoTrinh(maNd, maLoTrinh);
+                await TaoLichHocTuBaiHoc(maNd, maLoTrinh, dangKy.NgayDangKy ?? DateTime.Now);
 
                 await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
                     message = "Đăng ký thành công",
-                    data = new { maDangKy = dangKy.MaDangKy, tenLoTrinh = loTrinh.TenLoTrinh }
+                    data = new
+                    {
+                        maDangKy = dangKy.MaDangKy,
+                        tenLoTrinh = loTrinh.TenLoTrinh
+                    }
                 });
             }
             catch (Exception ex)
@@ -129,26 +149,25 @@ namespace TOEICWEB.Controllers
             }
         }
 
-        private async Task TaoLichHocTheoLoTrinh(string maNd, string maLoTrinh)
+        private async Task TaoLichHocTuBaiHoc(string maNd, string maLoTrinh, DateTime ngayDangKy)
         {
-            // Lấy tất cả bài học trong lộ trình (đã sắp xếp theo so_thu_tu)
-            var danhSachBaiHoc = await _context.BaiHocs
+            var baiHocs = await _context.BaiHocs
                 .Where(b => b.MaLoTrinh == maLoTrinh)
                 .OrderBy(b => b.SoThuTu)
                 .ToListAsync();
 
-            if (!danhSachBaiHoc.Any()) return;
+            if (!baiHocs.Any()) return;
 
-            var ngayBatDau = DateTime.Today;
             var lichHocs = new List<LichHocTap>();
+            var ngayHocHienTai = ngayDangKy.Date;
             int tuanHoc = 1;
-            int ngayHocIndex = 0;
+            bool isFirst = true;
 
-            foreach (var baiHoc in danhSachBaiHoc)
+            foreach (var baiHoc in baiHocs)
             {
-                var ngayHoc = ngayBatDau.AddDays(ngayHocIndex);
+                var thuTuNgay = (int)ngayHocHienTai.DayOfWeek == 0 ? 7 : (int)ngayHocHienTai.DayOfWeek;
 
-                // 1. Thêm bài học lý thuyết/video
+                // 1. Bài lý thuyết
                 lichHocs.Add(new LichHocTap
                 {
                     MaLich = $"LICH_{maNd}_{baiHoc.MaBai}_LT",
@@ -157,15 +176,17 @@ namespace TOEICWEB.Controllers
                     MaBai = baiHoc.MaBai,
                     TieuDe = $"Lý thuyết: {baiHoc.TenBai}",
                     MoTa = baiHoc.MoTa,
-                    LoaiNoiDung = "Lý thuyết",
-                    NgayHoc = DateOnly.FromDateTime(ngayHoc),
-                    TrangThai = (ngayHocIndex == 0) ? "Đã mở khóa" : "Chưa mở khóa",
+                    LoaiNoiDung = LichHocTap.ContentType.LyThuyet,
+                    NgayHoc = DateOnly.FromDateTime(ngayHocHienTai),
+                    TrangThai = isFirst ? LichHocTap.Status.DaMoKhoa : LichHocTap.Status.ChuaMoKhoa,
                     DaHoanThanh = false,
-                    ThuTuNgay = ((int)ngayHoc.DayOfWeek == 0) ? 7 : (int)ngayHoc.DayOfWeek,
+                    ThuTuNgay = thuTuNgay,
                     TuanHoc = tuanHoc
                 });
 
-                // 2. Thêm bài nghe (nếu có)
+                isFirst = false;
+
+                // 2. Bài nghe
                 var baiNghe = await _context.BaiNghes.FirstOrDefaultAsync(bn => bn.MaBai == baiHoc.MaBai);
                 if (baiNghe != null)
                 {
@@ -175,18 +196,18 @@ namespace TOEICWEB.Controllers
                         MaNd = maNd,
                         MaLoTrinh = maLoTrinh,
                         MaBai = baiHoc.MaBai,
-                        TieuDe = $"Bài nghe: {baiNghe.TieuDe}",
+                        TieuDe = $"Nghe: {baiNghe.TieuDe}",
                         MoTa = $"Luyện nghe - {baiNghe.DoKho}",
-                        LoaiNoiDung = "Nghe",
-                        NgayHoc = DateOnly.FromDateTime(ngayHoc),
-                        TrangThai = "Chưa mở khóa",
+                        LoaiNoiDung = LichHocTap.ContentType.Nghe,
+                        NgayHoc = DateOnly.FromDateTime(ngayHocHienTai),
+                        TrangThai = LichHocTap.Status.ChuaMoKhoa,
                         DaHoanThanh = false,
-                        ThuTuNgay = ((int)ngayHoc.DayOfWeek == 0) ? 7 : (int)ngayHoc.DayOfWeek,
+                        ThuTuNgay = thuTuNgay,
                         TuanHoc = tuanHoc
                     });
                 }
 
-                // 3. Thêm bài đọc (nếu có)
+                // 3. Bài đọc
                 var baiDoc = await _context.BaiDocs.FirstOrDefaultAsync(bd => bd.MaBai == baiHoc.MaBai);
                 if (baiDoc != null)
                 {
@@ -196,25 +217,20 @@ namespace TOEICWEB.Controllers
                         MaNd = maNd,
                         MaLoTrinh = maLoTrinh,
                         MaBai = baiHoc.MaBai,
-                        TieuDe = $"Bài đọc: {baiDoc.TieuDe}",
+                        TieuDe = $"Đọc: {baiDoc.TieuDe}",
                         MoTa = $"Luyện đọc hiểu - {baiDoc.DoKho}",
-                        LoaiNoiDung = "Đọc",
-                        NgayHoc = DateOnly.FromDateTime(ngayHoc),
-                        TrangThai = "Chưa mở khóa",
+                        LoaiNoiDung = LichHocTap.ContentType.Doc,
+                        NgayHoc = DateOnly.FromDateTime(ngayHocHienTai),
+                        TrangThai = LichHocTap.Status.ChuaMoKhoa,
                         DaHoanThanh = false,
-                        ThuTuNgay = ((int)ngayHoc.DayOfWeek == 0) ? 7 : (int)ngayHoc.DayOfWeek,
+                        ThuTuNgay = thuTuNgay,
                         TuanHoc = tuanHoc
                     });
                 }
 
-                // Tăng ngày học (mỗi bài học = 1 ngày)
-                ngayHocIndex++;
-
-                // Cập nhật tuần học (sau thứ 7)
-                if (ngayHoc.DayOfWeek == DayOfWeek.Saturday)
-                {
+                ngayHocHienTai = ngayHocHienTai.AddDays(1);
+                if (ngayHocHienTai.DayOfWeek == DayOfWeek.Saturday)
                     tuanHoc++;
-                }
             }
 
             _context.LichHocTaps.AddRange(lichHocs);
@@ -228,43 +244,83 @@ namespace TOEICWEB.Controllers
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
+                var maNd = GetMaNd();
+                if (string.IsNullOrEmpty(maNd))
+                    return BadRequest(new { message = "Không tìm thấy người dùng" });
 
-                var loTrinhs = await _context.DangKyLoTrinhs
+                var dangKyList = await _context.DangKyLoTrinhs
                     .Where(dk => dk.MaNd == maNd)
                     .Join(_context.LoTrinhCoSans,
                         dk => dk.MaLoTrinh,
                         lt => lt.MaLoTrinh,
-                        (dk, lt) => new DangKyLoTrinhDto
-                        {
-                            MaDangKy = dk.MaDangKy,
-                            MaLoTrinh = dk.MaLoTrinh,
-                            TenLoTrinh = lt.TenLoTrinh,
-                            MoTa = lt.MoTa,
-                            CapDo = lt.CapDo,
-                            TongSoBai = (int)lt.TongSoBai,
-                            NgayDangKy = dk.NgayDangKy ?? DateTime.MinValue,
-                            TrangThai = dk.TrangThai
-                        })
-                    .OrderByDescending(x => x.NgayDangKy)
+                        (dk, lt) => new { dk, lt })
                     .ToListAsync();
 
-                return Ok(new
+                if (!dangKyList.Any())
+                    return Ok(new { message = "Chưa có lộ trình nào", total = 0, data = new object[0] });
+
+                var maLoTrinhs = dangKyList.Select(x => x.dk.MaLoTrinh).ToList();
+
+                var baiHocs = await _context.BaiHocs
+                    .Where(b => maLoTrinhs.Contains(b.MaLoTrinh))
+                    .Select(b => new
+                    {
+                        b.MaLoTrinh,
+                        b.MaBai,
+                        b.TenBai,
+                        b.MoTa,
+                        ThoiLuongPhut = b.ThoiLuongPhut ?? 0,
+                        b.SoThuTu,
+                        b.NgayTao
+                    })
+                    .OrderBy(b => b.MaLoTrinh)
+                    .ThenBy(b => b.SoThuTu)
+                    .ToListAsync();
+
+                var lichHoc = await _context.LichHocTaps
+                    .Where(l => l.MaNd == maNd && maLoTrinhs.Contains(l.MaLoTrinh))
+                    .Select(l => new { l.MaBai, l.TrangThai, l.DaHoanThanh })
+                    .ToListAsync();
+
+                var result = dangKyList.Select(dk => new
                 {
-                    message = loTrinhs.Count == 0 ? "Chưa có lộ trình" : "Lộ trình của bạn",
-                    total = loTrinhs.Count,
-                    data = loTrinhs
-                });
+                    dk.dk.MaDangKy,
+                    dk.dk.MaLoTrinh,
+                    dk.lt.TenLoTrinh,
+                    dk.lt.MoTa,
+                    dk.lt.CapDo,
+                    dk.lt.ThoiGianDuKien,
+                    TongSoBai = (int)dk.lt.TongSoBai,
+                    NgayDangKy = dk.dk.NgayDangKy ?? DateTime.MinValue,
+                    dk.dk.TrangThai,
+                    BaiHocs = baiHocs
+                        .Where(b => b.MaLoTrinh == dk.dk.MaLoTrinh)
+                        .Select(b => new
+                        {
+                            b.MaBai,
+                            b.TenBai,
+                            b.MoTa,
+                            b.ThoiLuongPhut,
+                            b.SoThuTu,
+                            b.NgayTao,
+                            TrangThai = lichHoc.FirstOrDefault(l => l.MaBai == b.MaBai)?.TrangThai ?? LichHocTap.Status.ChuaMoKhoa,
+                            DaHoanThanh = lichHoc.FirstOrDefault(l => l.MaBai == b.MaBai)?.DaHoanThanh ?? false
+                        })
+                        .ToList()
+                })
+                .OrderByDescending(x => x.NgayDangKy)
+                .ToList();
+
+                return Ok(new { message = "Lộ trình của bạn", total = result.Count, data = result });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Lỗi", error = ex.Message });
+                return StatusCode(500, new { message = "Lỗi khi lấy lộ trình", error = ex.Message });
             }
         }
         #endregion
 
-        #region 5. Lịch học của tôi (tất cả lộ trình đã đăng ký)
+        #region 5. Lịch học của tôi
         [Authorize]
         [HttpGet("lich-hoc")]
         public async Task<IActionResult> GetLichHocCuaToi(
@@ -274,57 +330,45 @@ namespace TOEICWEB.Controllers
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd))
                     return BadRequest(new { message = "Không tìm thấy người dùng" });
 
-                // Lấy danh sách lộ trình đã đăng ký - lấy dữ liệu thô trước
-                var danhSachDangKyRaw = await _context.DangKyLoTrinhs
+                var dangKyList = await _context.DangKyLoTrinhs
                     .Where(dk => dk.MaNd == maNd)
                     .Join(_context.LoTrinhCoSans,
                         dk => dk.MaLoTrinh,
                         lt => lt.MaLoTrinh,
-                        (dk, lt) => new
-                        {
-                            dk.MaLoTrinh,
-                            lt.TenLoTrinh,
-                            dk.NgayDangKy,
-                            lt.ThoiGianDuKien // Giữ nguyên kiểu gốc
-                        })
+                        (dk, lt) => new { dk, lt })
                     .ToListAsync();
 
-                // Xử lý chuyển đổi sau khi lấy dữ liệu
-                var danhSachDangKy = danhSachDangKyRaw.Select(d => new
-                {
-                    d.MaLoTrinh,
-                    d.TenLoTrinh,
-                    NgayDangKy = d.NgayDangKy ?? DateTime.Now,
-                    ThoiGianDuKien = ConvertToInt(d.ThoiGianDuKien, 30)
-                }).ToList();
-
-                if (!danhSachDangKy.Any())
+                if (!dangKyList.Any())
                     return NotFound(new { message = "Bạn chưa đăng ký lộ trình nào" });
 
-                // Nếu có filter theo mã lộ trình
                 if (!string.IsNullOrEmpty(maLoTrinh))
+                    dangKyList = dangKyList.Where(x => x.dk.MaLoTrinh == maLoTrinh).ToList();
+
+                if (!dangKyList.Any())
+                    return NotFound(new { message = "Không tìm thấy lộ trình đã đăng ký" });
+
+                foreach (var item in dangKyList)
                 {
-                    danhSachDangKy = danhSachDangKy.Where(d => d.MaLoTrinh == maLoTrinh).ToList();
-                    if (!danhSachDangKy.Any())
-                        return NotFound(new { message = "Không tìm thấy lộ trình đã đăng ký" });
+                    var daCoLich = await _context.LichHocTaps
+                        .AnyAsync(l => l.MaNd == maNd && l.MaLoTrinh == item.dk.MaLoTrinh);
+
+                    if (!daCoLich)
+                    {
+                        await TaoLichHocTuBaiHoc(maNd, item.dk.MaLoTrinh, item.dk.NgayDangKy ?? DateTime.Now);
+                    }
                 }
 
-                // Tính khoảng thời gian tổng hợp
-                var ngayBatDau = danhSachDangKy.Min(d => d.NgayDangKy).Date;
-                var ngayKetThuc = danhSachDangKy.Max(d => d.NgayDangKy.AddDays(d.ThoiGianDuKien)).Date;
+                await _context.SaveChangesAsync();
 
-                // Lấy danh sách mã lộ trình để filter
-                var maLoTrinhs = danhSachDangKy.Select(d => d.MaLoTrinh).ToList();
-
+                var maLoTrinhs = dangKyList.Select(x => x.dk.MaLoTrinh).ToList();
                 var query = _context.LichHocTaps
                     .Where(l => l.MaNd == maNd && maLoTrinhs.Contains(l.MaLoTrinh));
 
                 var total = await query.CountAsync();
-
                 var lich = await query
                     .OrderBy(l => l.NgayHoc)
                     .ThenBy(l => l.ThuTuNgay)
@@ -346,18 +390,24 @@ namespace TOEICWEB.Controllers
                     })
                     .ToListAsync();
 
+                var ngayBatDau = dangKyList.Min(x => (x.dk.NgayDangKy ?? DateTime.Now).Date);
+                var ngayKetThuc = dangKyList.Max(x =>
+                    (x.dk.NgayDangKy ?? DateTime.Now).AddDays(ConvertToInt(x.lt.ThoiGianDuKien, 30)).Date);
+
                 return Ok(new
                 {
                     message = "Lịch học của bạn",
                     ngayBatDau = ngayBatDau.ToString("yyyy-MM-dd"),
                     ngayKetThuc = ngayKetThuc.ToString("yyyy-MM-dd"),
-                    soLoTrinh = danhSachDangKy.Count,
-                    danhSachLoTrinh = danhSachDangKy.Select(d => new
+                    soLoTrinh = dangKyList.Count,
+                    danhSachLoTrinh = dangKyList.Select(x => new
                     {
-                        d.MaLoTrinh,
-                        d.TenLoTrinh,
-                        ngayBatDau = d.NgayDangKy.ToString("yyyy-MM-dd"),
-                        ngayKetThuc = d.NgayDangKy.AddDays(d.ThoiGianDuKien).ToString("yyyy-MM-dd")
+                        x.dk.MaLoTrinh,
+                        x.lt.TenLoTrinh,
+                        ngayBatDau = (x.dk.NgayDangKy ?? DateTime.Now).ToString("yyyy-MM-dd"),
+                        ngayKetThuc = (x.dk.NgayDangKy ?? DateTime.Now)
+                            .AddDays(ConvertToInt(x.lt.ThoiGianDuKien, 30))
+                            .ToString("yyyy-MM-dd")
                     }),
                     total,
                     page,
@@ -372,32 +422,71 @@ namespace TOEICWEB.Controllers
             }
         }
 
-        // Thêm helper method để chuyển đổi
         private int ConvertToInt(object? value, int defaultValue)
         {
-            if (value == null)
-                return defaultValue;
-
-            // Nếu đã là int
-            if (value is int intValue)
-                return intValue;
-
-            // Nếu là string, parse
-            if (value is string strValue && int.TryParse(strValue, out var result))
-                return result;
-
+            if (value == null) return defaultValue;
+            if (value is int i) return i;
+            if (value is string s && int.TryParse(s, out var result)) return result;
             return defaultValue;
         }
         #endregion
 
-        #region 6. Tiến độ lộ trình
+        #region 6. Cập nhật tiến độ
+        [Authorize]
+        [HttpPut("cap-nhat-tien-do/{maBai}")]
+        public async Task<IActionResult> CapNhatTienDo(string maBai, [FromBody] CapNhatTienDoRequest req)
+        {
+            try
+            {
+                var maNd = GetMaNd();
+                if (string.IsNullOrEmpty(maNd))
+                    return BadRequest(new { message = "Không tìm thấy người dùng" });
+
+                var td = await _context.TienDoHocTaps
+                    .FirstOrDefaultAsync(t => t.MaBai == maBai && t.MaNd == maNd);
+
+                if (td == null)
+                {
+                    td = new TienDoHocTap { MaBai = maBai, MaNd = maNd };
+                    _context.TienDoHocTaps.Add(td);
+                }
+
+                td.PhanTramHoanThanh = Math.Clamp(req.PhanTramHoanThanh, 0, 100);
+                td.ThoiGianHocPhut += req.ThoiGianHocPhut;
+                td.TrangThai = td.PhanTramHoanThanh >= 100 ? "Hoàn thành" : "Đang học";
+                td.NgayCapNhat = DateTime.Now;
+
+                if (td.PhanTramHoanThanh >= 100)
+                    td.NgayHoanThanh = DateTime.Now;
+
+                var lich = await _context.LichHocTaps
+                    .FirstOrDefaultAsync(l => l.MaBai == maBai && l.MaNd == maNd && l.LoaiNoiDung == LichHocTap.ContentType.LyThuyet);
+
+                if (lich != null && td.PhanTramHoanThanh >= 100)
+                {
+                    lich.DaHoanThanh = true;
+                    lich.NgayHoanThanh = DateTime.Now;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Cập nhật tiến độ thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi cập nhật", error = ex.Message });
+            }
+        }
+        #endregion
+
+        #region 7. Các API phụ
         [Authorize]
         [HttpGet("tien-do/{maLoTrinh}")]
         public async Task<IActionResult> GetTienDoLoTrinh(string maLoTrinh)
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var dangKy = await _context.DangKyLoTrinhs
@@ -426,7 +515,7 @@ namespace TOEICWEB.Controllers
 
                 return Ok(new
                 {
-                    message = "Tiến độ",
+                    message = "Tiến độ lộ trình",
                     data = new
                     {
                         tenLoTrinh = loTrinh?.TenLoTrinh,
@@ -443,164 +532,98 @@ namespace TOEICWEB.Controllers
                 return StatusCode(500, new { message = "Lỗi", error = ex.Message });
             }
         }
-        #endregion
 
-        #region 7. Cập nhật trạng thái lộ trình
         [Authorize]
         [HttpPut("cap-nhat-trang-thai/{maLoTrinh}")]
         public async Task<IActionResult> CapNhatTrangThai(string maLoTrinh, [FromBody] TrangThaiRequest req)
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var dk = await _context.DangKyLoTrinhs
                     .FirstOrDefaultAsync(d => d.MaLoTrinh == maLoTrinh && d.MaNd == maNd);
-                if (dk == null) return NotFound(new { message = "Không tìm thấy" });
+                if (dk == null) return NotFound(new { message = "Không tìm thấy đăng ký" });
 
                 dk.TrangThai = req.TrangThai;
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Cập nhật thành công" });
+                return Ok(new { message = "Cập nhật trạng thái thành công" });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Lỗi", error = ex.Message });
             }
         }
-        #endregion
 
-        #region 8. Hủy đăng ký
         [Authorize]
         [HttpDelete("huy-dang-ky/{maLoTrinh}")]
         public async Task<IActionResult> HuyDangKy(string maLoTrinh)
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var dk = await _context.DangKyLoTrinhs
                     .FirstOrDefaultAsync(d => d.MaLoTrinh == maLoTrinh && d.MaNd == maNd);
-                if (dk == null) return NotFound(new { message = "Không tìm thấy" });
+                if (dk == null) return NotFound(new { message = "Không tìm thấy đăng ký" });
 
-                var lichs = await _context.LichHocTaps.Where(l => l.MaLoTrinh == maLoTrinh && l.MaNd == maNd).ToListAsync();
+                var lichs = await _context.LichHocTaps
+                    .Where(l => l.MaLoTrinh == maLoTrinh && l.MaNd == maNd).ToListAsync();
+
                 var maBais = lichs.Select(l => l.MaBai).ToList();
-                var tienDos = await _context.TienDoHocTaps.Where(t => maBais.Contains(t.MaBai) && t.MaNd == maNd).ToListAsync();
+                var tienDos = await _context.TienDoHocTaps
+                    .Where(t => maBais.Contains(t.MaBai) && t.MaNd == maNd).ToListAsync();
 
                 _context.LichHocTaps.RemoveRange(lichs);
                 _context.TienDoHocTaps.RemoveRange(tienDos);
                 _context.DangKyLoTrinhs.Remove(dk);
 
                 await _context.SaveChangesAsync();
-                return Ok(new { message = "Hủy thành công" });
+
+                return Ok(new { message = "Hủy đăng ký thành công" });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Lỗi", error = ex.Message });
             }
         }
-        #endregion
 
-        #region 9. Cập nhật tiến độ + Mở khóa bài tiếp theo
-        [Authorize]
-        [HttpPut("cap-nhat-tien-do/{maBai}")]
-        public async Task<IActionResult> CapNhatTienDo(string maBai, [FromBody] CapNhatTienDoRequest req)
-        {
-            try
-            {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
-
-                // 1. Cập nhật tiến độ
-                var td = await _context.TienDoHocTaps
-                    .FirstOrDefaultAsync(t => t.MaBai == maBai && t.MaNd == maNd);
-
-                if (td == null)
-                {
-                    td = new TienDoHocTap { MaBai = maBai, MaNd = maNd };
-                    _context.TienDoHocTaps.Add(td);
-                }
-
-                td.PhanTramHoanThanh = Math.Clamp(req.PhanTramHoanThanh, 0, 100);
-                td.ThoiGianHocPhut += req.ThoiGianHocPhut;
-                td.TrangThai = td.PhanTramHoanThanh >= 100 ? "Hoàn thành" : "Đang học";
-
-                if (td.PhanTramHoanThanh >= 100)
-                {
-                    td.NgayHoanThanh = DateTime.Now;
-                }
-
-                // 2. Cập nhật trạng thái lịch học
-                var lichHienTai = await _context.LichHocTaps
-                    .FirstOrDefaultAsync(l => l.MaBai == maBai && l.MaNd == maNd);
-
-                if (lichHienTai != null && td.PhanTramHoanThanh >= 100)
-                {
-                    lichHienTai.DaHoanThanh = true;
-                    lichHienTai.NgayHoanThanh = DateTime.Now;
-
-                    // 3. Mở khóa bài tiếp theo trong cùng lộ trình
-                    var lichTiepTheo = await _context.LichHocTaps
-                        .Where(l => l.MaNd == maNd
-                            && l.MaLoTrinh == lichHienTai.MaLoTrinh
-                            && l.NgayHoc >= lichHienTai.NgayHoc
-                            && l.TrangThai == "Chưa mở khóa")
-                        .OrderBy(l => l.NgayHoc)
-                        .ThenBy(l => l.ThuTuNgay)
-                        .FirstOrDefaultAsync();
-
-                    if (lichTiepTheo != null)
-                    {
-                        lichTiepTheo.TrangThai = "Đã mở khóa";
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return Ok(new { message = "Cập nhật thành công" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Lỗi", error = ex.Message });
-            }
-        }
-        #endregion
-
-        #region 10. Tổng quan
         [Authorize]
         [HttpGet("tong-quan")]
         public async Task<IActionResult> GetTongQuan()
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var result = await _context.Database
                     .SqlQueryRaw<TongQuanTienDoDto>(
-                        "SELECT * FROM fn_thong_ke_hoc_tap(@p0)",
-                        maNd
-                    )
+                        "SELECT * FROM fn_thong_ke_hoc_tap(@p0)", maNd)
                     .FirstOrDefaultAsync();
 
-                return Ok(new { message = "Tổng quan", data = result ?? new TongQuanTienDoDto() });
+                return Ok(new
+                {
+                    message = "Tổng quan tiến độ",
+                    data = result ?? new TongQuanTienDoDto()
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "Lỗi", error = ex.Message });
             }
         }
-        #endregion
 
-        #region 11. Log hoạt động
         [Authorize]
         [HttpGet("log-hoat-dong")]
         public async Task<IActionResult> GetLog([FromQuery] int page = 1, [FromQuery] int size = 10)
         {
             try
             {
-                var maNd = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var maNd = GetMaNd();
                 if (string.IsNullOrEmpty(maNd)) return BadRequest(new { message = "Không tìm thấy người dùng" });
 
                 var logs = await _context.LogHoatDongs
@@ -620,7 +643,15 @@ namespace TOEICWEB.Controllers
                     .ToListAsync();
 
                 var total = await _context.LogHoatDongs.CountAsync(l => l.MaNd == maNd);
-                return Ok(new { message = "Log", total, page, size, data = logs });
+
+                return Ok(new
+                {
+                    message = "Lịch sử hoạt động",
+                    total,
+                    page,
+                    size,
+                    data = logs
+                });
             }
             catch (Exception ex)
             {

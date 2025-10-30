@@ -3,8 +3,60 @@
   "WorkspaceRootPath": "D:\\CODE\\vs2022\\TOEICWEB\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\baihoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\baihoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\baihocdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\baihocdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\baidoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\baidoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\baidocdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\baidocdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\bainghedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\bainghedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\lotrinhcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\lotrinhcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\lichhoctap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\lichhoctap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\lotrinh\\lichhoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\lotrinh\\lichhoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\extensions\\stringextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\extensions\\stringextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\traloihocviennghe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\traloihocviennghe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\tiendohoctapcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\tiendohoctapcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\muctieutheongay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\muctieutheongay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\lotrinhcosan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\lotrinhcosan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\bainghecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,24 +71,8 @@
       "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\ketquabainghe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\traloihocviennghe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\traloihocviennghe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\traloihocviendoc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\traloihocviendoc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\baidoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\baidoccontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\controllers\\lotrinhcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\controllers\\lotrinhcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\lotrinhcosan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\lotrinhcosan.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\lotrinh\\muctieutheongaydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -45,14 +81,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\lotrinh\\tiendohoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\lotrinh\\tiendohoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\lotrinh\\lichhoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\viewmodels\\lotrinh\\lichhoctapdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\models\\lichhoctap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|solutionrelative:toeicweb\\models\\lichhoctap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3ED62001-C372-4CB6-98E9-21BFEC101B7B}|TOEICWEB\\TOEICWEB.csproj|d:\\code\\vs2022\\toeicweb\\toeicweb\\viewmodels\\lotrinh\\lotrinhcosandto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,17 +98,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 539,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "LoTrinhCoSan.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\LoTrinhCoSan.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\LoTrinhCoSan.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\LoTrinhCoSan.cs",
               "RelativeToolTip": "TOEICWEB\\Models\\LoTrinhCoSan.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAswBEAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAiwBEAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-29T05:00:17.351Z",
               "IsPinned": true
@@ -99,20 +127,110 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BaiDocDTO.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiDocDTO.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\BaiDocDTO.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiDocDTO.cs",
+              "RelativeToolTip": "TOEICWEB\\ViewModels\\BaiDocDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T15:49:17.573Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BaiNgheDTO.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiNgheDTO.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\BaiNgheDTO.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiNgheDTO.cs",
+              "RelativeToolTip": "TOEICWEB\\ViewModels\\BaiNgheDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T15:49:09.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BaiHocDTO.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiHocDTO.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\BaiHocDTO.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\BaiHocDTO.cs*",
+              "RelativeToolTip": "TOEICWEB\\ViewModels\\BaiHocDTO.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T15:44:32.177Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "BaiHocController.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\BaiHocController.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\BaiHocController.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\BaiHocController.cs*",
+              "RelativeToolTip": "TOEICWEB\\Controllers\\BaiHocController.cs*",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAI8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T15:33:38.633Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "StringExtensions.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Extensions\\StringExtensions.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\Extensions\\StringExtensions.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Extensions\\StringExtensions.cs",
+              "RelativeToolTip": "TOEICWEB\\Extensions\\StringExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T14:47:31.926Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "TOEICWEB\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAHUBAAAAAAAAAAAAwJ8BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T13:59:31.929Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "MucTieuTheoNgay.cs",
+              "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\MucTieuTheoNgay.cs",
+              "RelativeDocumentMoniker": "TOEICWEB\\Models\\MucTieuTheoNgay.cs",
+              "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\MucTieuTheoNgay.cs",
+              "RelativeToolTip": "TOEICWEB\\Models\\MucTieuTheoNgay.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T11:36:59.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "TienDoHocTapController.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\TienDoHocTapController.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\TienDoHocTapController.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\TienDoHocTapController.cs",
               "RelativeToolTip": "TOEICWEB\\Controllers\\TienDoHocTapController.cs",
-              "ViewState": "AgIAAOYAAAAAAAAAAAAYwP8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAmwLcAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-29T11:09:20.861Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 16,
               "Title": "KetQuaBaiNghe.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\KetQuaBaiNghe.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\KetQuaBaiNghe.cs",
@@ -120,12 +238,11 @@
               "RelativeToolTip": "TOEICWEB\\Models\\KetQuaBaiNghe.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAADwvy0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T11:00:27.511Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-29T11:00:27.511Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "TraLoiHocVienNghe.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\TraLoiHocVienNghe.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\TraLoiHocVienNghe.cs",
@@ -138,7 +255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 14,
               "Title": "BaiNgheController.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\BaiNgheController.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\BaiNgheController.cs",
@@ -146,12 +263,11 @@
               "RelativeToolTip": "TOEICWEB\\Controllers\\BaiNgheController.cs",
               "ViewState": "AgIAAEsAAAAAAAAAAAAUwFkAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T10:38:18.561Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-29T10:38:18.561Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 15,
               "Title": "SupabaseDbContext.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Data\\SupabaseDbContext.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Data\\SupabaseDbContext.cs",
@@ -159,12 +275,11 @@
               "RelativeToolTip": "TOEICWEB\\Data\\SupabaseDbContext.cs",
               "ViewState": "AgIAAE4DAAAAAAAAAADwvywEAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T10:00:32.369Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-29T10:00:32.369Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 17,
               "Title": "TraLoiHocVienDoc.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\TraLoiHocVienDoc.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\TraLoiHocVienDoc.cs",
@@ -172,25 +287,24 @@
               "RelativeToolTip": "TOEICWEB\\Models\\TraLoiHocVienDoc.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAA8wCAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T09:30:59.753Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-29T09:30:59.753Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "BaiDocController.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\BaiDocController.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\BaiDocController.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\BaiDocController.cs",
               "RelativeToolTip": "TOEICWEB\\Controllers\\BaiDocController.cs",
-              "ViewState": "AgIAAG8BAAAAAAAAAAAkwKMBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAG8BAAAAAAAAAAA5wKMBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-29T08:09:31.071Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 19,
               "Title": "TienDoHocTapDto.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\LoTrinh\\TienDoHocTapDto.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\LoTrinh\\TienDoHocTapDto.cs",
@@ -202,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 18,
               "Title": "MucTieuTheoNgayDto.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\LoTrinh\\MucTieuTheoNgayDto.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\LoTrinh\\MucTieuTheoNgayDto.cs",
@@ -214,31 +328,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 7,
               "Title": "LichHocTapDto.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\LoTrinh\\LichHocTapDto.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\LoTrinh\\LichHocTapDto.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\LoTrinh\\LichHocTapDto.cs",
               "RelativeToolTip": "TOEICWEB\\ViewModels\\LoTrinh\\LichHocTapDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA5wBAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T15:10:35.019Z"
+              "WhenOpened": "2025-10-28T15:10:35.019Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 6,
               "Title": "LichHocTap.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\LichHocTap.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\LichHocTap.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\LichHocTap.cs",
               "RelativeToolTip": "TOEICWEB\\Models\\LichHocTap.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAAAC4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAxwFUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T15:07:26.554Z"
+              "WhenOpened": "2025-10-28T15:07:26.554Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 21,
               "Title": "VMucTieuHomNay.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Models\\VMucTieuHomNay.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Models\\VMucTieuHomNay.cs",
@@ -250,7 +366,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 20,
               "Title": "LoTrinhCoSanDto.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\ViewModels\\LoTrinh\\LoTrinhCoSanDto.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\ViewModels\\LoTrinh\\LoTrinhCoSanDto.cs",
@@ -262,13 +378,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "LoTrinhController.cs",
               "DocumentMoniker": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\LoTrinhController.cs",
               "RelativeDocumentMoniker": "TOEICWEB\\Controllers\\LoTrinhController.cs",
               "ToolTip": "D:\\CODE\\vs2022\\TOEICWEB\\TOEICWEB\\Controllers\\LoTrinhController.cs",
               "RelativeToolTip": "TOEICWEB\\Controllers\\LoTrinhController.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAYwPYBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAQwD8BAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-28T13:43:37.533Z",
               "EditorCaption": ""

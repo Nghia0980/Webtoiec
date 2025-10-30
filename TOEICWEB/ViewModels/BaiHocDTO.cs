@@ -11,5 +11,10 @@
         public DateTime? NgayTao { get; set; }
         public List<VideoBaiHocDTO> Videos { get; set; } = new List<VideoBaiHocDTO>();
 
+        public List<BaiNgheDTO> BaiNghes { get; set; } = new();
+        public List<BaiDocDTO> BaiDocs { get; set; } = new();
+
+
+
     }
 }
